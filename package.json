@@ -1,6 +1,6 @@
 {
   "name": "@jswork/minwait",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Ensure async operations take at least N milliseconds.",
   "npmClient": "pnpm",
   "main": "dist/index.cjs.js",
@@ -35,9 +35,5 @@
     "registry": "https://registry.npmjs.org"
   },
   "homepage": "https://js.work",
-  "keywords": [
-    "@jswork/minwait",
-    "number",
-    "num"
-  ]
+  "keywords": []
 }
