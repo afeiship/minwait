@@ -3,6 +3,8 @@
  * @param asyncFn 要执行的异步函数
  * @param minMs 最小耗时（毫秒），默认 100
  * @returns 异步函数的返回值
+ *
+ * AI: https://chat.qwen.ai/c/664abe9f-c13c-45c3-b900-d6647cab4deb
  */
 async function minwait<T>(
   asyncFn: () => Promise<T>,
