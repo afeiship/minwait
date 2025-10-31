@@ -1,18 +1,54 @@
-import fn from '../src';
+import minwait from '../src';
 
 describe('Normal test cases', () => {
-  test('number is equal 0/10/100/1000/10000', () => {
-    expect(fn(0)).toEqual([0]);
-    expect(fn(10)).toEqual([10, 0]);
-    expect(fn(30)).toEqual([30, 0]);
-    expect(fn(40)).toEqual([40, 0]);
-    expect(fn(50)).toEqual([50, 0]);
-    expect(fn(60)).toEqual([60, 0]);
-    expect(fn(70)).toEqual([70, 0]);
-    expect(fn(80)).toEqual([80, 0]);
-    expect(fn(90)).toEqual([90, 0]);
-    expect(fn(100)).toEqual([100, 0, 0]);
-    expect(fn(1000)).toEqual([1000, 0, 0, 0]);
-    expect(fn(10000)).toEqual([10000, 0, 0, 0, 0]);
+  test('should wait for minMs if asyncFn resolves faster than minMs', async () => {
+    const asyncFn = async () => {
+      await new Promise(resolve => setTimeout(resolve, 50));
+      return 'fast';
+    };
+    const start = Date.now();
+    const result = await minwait(asyncFn, 100);
+    const elapsed = Date.now() - start;
+    expect(result).toBe('fast');
+    expect(elapsed).toBeGreaterThanOrEqual(100);
+  });
+
+  test('should not wait if asyncFn resolves slower than minMs', async () => {
+    const asyncFn = async () => {
+      await new Promise(resolve => setTimeout(resolve, 150));
+      return 'slow';
+    };
+    const start = Date.now();
+    const result = await minwait(asyncFn, 100);
+    const elapsed = Date.now() - start;
+    expect(result).toBe('slow');
+    expect(elapsed).toBeGreaterThanOrEqual(150);
+  });
+
+  test('should use default minMs if not provided', async () => {
+    const asyncFn = async () => {
+      await new Promise(resolve => setTimeout(resolve, 50));
+      return 'default';
+    };
+    const start = Date.now();
+    const result = await minwait(asyncFn);
+    const elapsed = Date.now() - start;
+    expect(result).toBe('default');
+    expect(elapsed).toBeGreaterThanOrEqual(100);
+  });
+
+  test('should return the value from the async function', async () => {
+    const asyncFn = async () => {
+      return 123;
+    };
+    const result = await minwait(asyncFn, 10);
+    expect(result).toBe(123);
+  });
+
+  test('should handle errors in asyncFn', async () => {
+    const asyncFn = async () => {
+      throw new Error('Test Error');
+    };
+    await expect(minwait(asyncFn, 100)).rejects.toThrow('Test Error');
   });
 });

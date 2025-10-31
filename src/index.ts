@@ -4,7 +4,7 @@
  * @param minMs 最小耗时（毫秒），默认 100
  * @returns 异步函数的返回值
  */
-export async function minwait<T>(
+async function minwait<T>(
   asyncFn: () => Promise<T>,
   minMs: number = 100
 ): Promise<T> {
@@ -19,3 +19,5 @@ export async function minwait<T>(
 
   return result;
 }
+
+export default minwait

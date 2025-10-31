@@ -15,9 +15,18 @@ yarn add @jswork/minwait
 ```js
 import minwait from '@jswork/minwait';
 
-minwait(1024);
+async function fetchData() {
+  return new Promise(resolve => setTimeout(() => resolve('Data fetched!'), 50));
+}
 
-// [1000, 0, 20, 4]
+async function main() {
+  console.log('Fetching data...');
+  const result = await minwait(fetchData, 1000);
+  console.log(result);
+  // Expected output after at least 1000ms: Data fetched!
+}
+
+main();
 ```
 
 ## license
